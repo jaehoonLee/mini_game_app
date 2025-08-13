@@ -36,19 +36,19 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ leaderboard, gameTitle }) => 
   };
 
   return (
-    <div className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm border border-gray-600/50 rounded-2xl p-6 shadow-2xl">
-      <h2 className="text-2xl font-bold text-white mb-6 text-center bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+    <div className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm border border-gray-600/50 rounded-2xl p-6 shadow-2xl h-full flex flex-col">
+      <h2 className="text-xl font-bold text-white mb-6 text-center bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
         🏆 {gameTitle} 순위표
       </h2>
       
       {!leaderboard || leaderboard.length === 0 ? (
-        <div className="text-center py-8">
+        <div className="flex-1 flex flex-col items-center justify-center">
           <div className="text-6xl mb-4">📊</div>
           <div className="text-gray-300 text-lg font-semibold mb-2">아직 기록이 없습니다</div>
           <div className="text-gray-400 text-sm">첫 번째 기록을 만들어보세요!</div>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="flex-1 space-y-3 overflow-y-auto">
           {leaderboard.map((record, index) => (
             <div
               key={record.timestamp}
