@@ -1,102 +1,183 @@
-import Image from "next/image";
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { getAllHighScores, resetAllScores, GAME_IDS } from '../utils/scoreManager';
+
+interface GameCard {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  color: string;
+  path: string;
+  difficulty: string;
+  players: string;
+}
+
+const games: GameCard[] = [
+  {
+    id: 'prison-break',
+    title: '프리즌 브레이크',
+    description: '경비원을 피해 감옥에서 탈출하세요! 은밀한 이동과 전략적 사고가 필요한 스텔스 게임입니다.',
+    icon: '🏃‍♂️',
+    color: 'from-gray-500 to-emerald-500',
+    path: '/games/prison-break',
+    difficulty: '보통',
+    players: '1인'
+  },
+  {
+    id: 'snake-game',
+    title: '스네이크 게임',
+    description: '클래식한 스네이크 게임! 사과를 먹어서 뱀을 길게 만들고 벽에 부딪히지 않도록 하세요.',
+    icon: '🐍',
+    color: 'from-green-500 to-emerald-500',
+    path: '/games/snake',
+    difficulty: '쉬움',
+    players: '1인'
+  },
+  // {
+  //   id: 'tetris',
+  //   title: '테트리스',
+  //   description: '전설의 퍼즐 게임! 블록을 회전시켜 줄을 완성하고 높은 점수를 획득하세요.',
+  //   icon: '🧩',
+  //   color: 'from-blue-500 to-cyan-500',
+  //   path: '/games/tetris',
+  //   difficulty: '보통',
+  //   players: '1인'
+  // },
+  // {
+  //   id: 'pong',
+  //   title: '퐁 게임',
+  //   description: 'AI와 대결하는 클래식 퐁! 패들을 움직여서 공을 받아치고 점수를 얻으세요.',
+  //   icon: '🏓',
+  //   color: 'from-purple-500 to-pink-500',
+  //   path: '/games/pong',
+  //   difficulty: '보통',
+  //   players: '1인 vs AI'
+  // },
+  // {
+  //   id: 'memory-game',
+  //   title: '메모리 게임',
+  //   description: '카드를 뒤집어서 같은 그림을 찾는 메모리 게임! 기억력과 집중력을 테스트해보세요.',
+  //   icon: '🧠',
+  //   color: 'from-yellow-500 to-amber-500',
+  //   path: '/games/memory',
+  //   difficulty: '쉬움',
+  //   players: '1인'
+  // },
+  // {
+  //   id: 'breakout',
+  //   title: '브레이크아웃',
+  //   description: '공과 패들로 벽돌을 깨는 게임! 모든 벽돌을 깨고 다음 레벨로 진행하세요.',
+  //   icon: '🧱',
+  //   color: 'from-indigo-500 to-purple-500',
+  //   path: '/games/breakout',
+  //   difficulty: '보통',
+  //   players: '1인'
+  // }
+];
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const router = useRouter();
+  const [highScores, setHighScores] = useState<Record<string, number>>({});
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+  // 최고 점수 로드
+  useEffect(() => {
+    const scores = getAllHighScores();
+    setHighScores(scores);
+  }, []);
+
+  // 점수 새로고침
+  const refreshScores = () => {
+    const scores = getAllHighScores();
+    setHighScores(scores);
+  };
+
+  const handleGameClick = (path: string) => {
+    router.push(path);
+  };
+
+  const handleResetScores = () => {
+    if (showResetConfirm) {
+      resetAllScores();
+      refreshScores();
+      setShowResetConfirm(false);
+    } else {
+      setShowResetConfirm(true);
+      // 3초 후 자동으로 확인 상태 해제
+      setTimeout(() => setShowResetConfirm(false), 3000);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      {/* 헤더 */}
+      <header className="text-center py-12">
+        <h1 className="text-5xl font-bold text-white mb-4">
+          🎮 미니게임 아케이드 🎮
+        </h1>
+        <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          다양한 미니게임을 즐겨보세요! 클래식부터 현대적인 게임까지 모든 것을 만나보실 수 있습니다.
+        </p>
+      </header>
+
+      {/* 게임 그리드 */}
+      <main className="max-w-7xl mx-auto px-4 pb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {games.map((game) => (
+            <div
+              key={game.id}
+              onClick={() => handleGameClick(game.path)}
+              className="group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+            >
+              <div className={`bg-gradient-to-br ${game.color} rounded-2xl p-6 h-full shadow-lg hover:shadow-2xl transition-shadow duration-300`}>
+                <div className="text-center">
+                  <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                    {game.icon}
+                  </div>
+                  <h2 className="text-2xl font-bold text-white mb-2">
+                    {game.title}
+                  </h2>
+                  <p className="text-white/90 text-sm mb-4 leading-relaxed">
+                    {game.description}
+                  </p>
+                  
+                  {/* 게임 정보 */}
+                  <div className="flex justify-center space-x-4 text-white/80 text-sm mb-4">
+                    <span className="bg-white/20 px-3 py-1 rounded-full">
+                      난이도: {game.difficulty}
+                    </span>
+                    <span className="bg-white/20 px-3 py-1 rounded-full">
+                      {game.players}
+                    </span>
+                  </div>
+
+                  {/* 최고 점수 표시 */}
+                  <div className="mb-4">
+                    <div className="text-white/70 text-xs mb-1">최고 점수</div>
+                    <div className="text-xl font-bold text-yellow-300">
+                      {highScores[game.id] || 0}
+                    </div>
+                  </div>
+                  
+                  {/* 플레이 버튼 */}
+                  <div>
+                    <button className="bg-white/20 hover:bg-white/30 text-white font-semibold py-2 px-6 rounded-full transition-colors duration-300 group-hover:bg-white/30">
+                      플레이하기 →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div> 
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      {/* 푸터 */}
+      <footer className="text-center py-8 text-gray-400">
+        <p>© 2024 미니게임 아케이드 - 즐거운 게임 시간을 보내세요! 🎮</p>
       </footer>
     </div>
   );
