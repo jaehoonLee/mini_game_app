@@ -186,110 +186,155 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
-      {/* 배경 패턴 */}
-      <div className="absolute inset-0 opacity-10">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden font-mono">
+      {/* 레트로 배경 패턴 */}
+      <div className="absolute inset-0 opacity-20">
         <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Crect x='0' y='0' width='1' height='1'/%3E%3Crect x='10' y='0' width='1' height='1'/%3E%3Crect x='0' y='10' width='1' height='1'/%3E%3Crect x='10' y='10' width='1' height='1'/%3E%3C/g%3E%3C/svg%3E")`
         }}></div>
       </div>
 
-      {/* 네온 효과 배경 */}
-      <div className="absolute top-0 left-0 w-full h-full">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-red-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-40 right-20 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-36 h-36 bg-green-500/20 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-1/3 w-28 h-28 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{animationDelay: '0.5s'}}></div>
+      {/* 스캔라인 효과 */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="w-full h-full" style={{
+          background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px)'
+        }}></div>
       </div>
 
       {/* 메인 컨테이너 */}
       <div className="relative z-10">
-        {/* 헤더 - 아케이드 사인 스타일 */}
-        <header className="text-center py-16">
+        {/* 헤더 - 레트로 아케이드 스타일 */}
+        <header className="text-center py-12">
           <div className="max-w-6xl mx-auto px-4">
             {/* 메인 타이틀 */}
             <div className="mb-8">
-              <h1 className="text-8xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-yellow-400 to-green-400 animate-pulse">
-                아케이드 존
+              <h1 className="text-6xl md:text-8xl font-black mb-4 text-white tracking-wider" style={{
+                textShadow: '0 0 10px #ff0, 0 0 20px #ff0, 0 0 30px #ff0, 0 0 40px #ff0',
+                fontFamily: 'monospace'
+              }}>
+                ARCADE ZONE
               </h1>
+              <div className="text-yellow-400 text-lg md:text-xl font-bold tracking-widest animate-pulse">
+                INSERT COIN TO START
+              </div>
+            </div>
+            
+            {/* 레트로 스타일 통계 */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto mb-8">
+              <div className="bg-black/80 border-2 border-green-400 p-4 rounded">
+                <div className="text-green-400 text-sm font-bold">GAMES</div>
+                <div className="text-white text-2xl font-bold">{games.length}</div>
+              </div>
+              <div className="bg-black/80 border-2 border-blue-400 p-4 rounded">
+                <div className="text-blue-400 text-sm font-bold">HIGH SCORE</div>
+                <div className="text-white text-2xl font-bold">
+                  {Math.max(...Object.values(highScores), 0)}
+                </div>
+              </div>
+              <div className="bg-black/80 border-2 border-red-400 p-4 rounded">
+                <div className="text-red-400 text-sm font-bold">TIME</div>
+                <div className="text-white text-2xl font-bold">
+                  {currentTime.toLocaleTimeString('en-US', { 
+                    hour12: false,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                  })}
+                </div>
+              </div>
             </div>
           </div>
         </header>
 
         {/* 게임 선택 섹션 */}
-        <main className="max-w-5xl mx-auto px-4 pb-16">
-          {/* 게임 카드들 - 그리드 배치로 변경 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <main className="max-w-6xl mx-auto px-4 pb-16">
+          {/* 게임 카드들 - 레트로 스타일 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {games.map((game, index) => (
               <div
                 key={game.id}
                 onClick={() => handleGameClick(game.path, game.id)}
-                className={`group cursor-pointer transform transition-all duration-500 hover:scale-105 hover:rotate-2 ${
+                className={`group cursor-pointer transform transition-all duration-300 hover:scale-105 ${
                   selectedGame === game.id ? 'scale-95' : ''
                 }`}
               >
-                <div className={`bg-gradient-to-r from-gray-800/80 to-gray-900/80 border-4 border-gray-600 rounded-2xl p-6 shadow-2xl hover:shadow-3xl transition-all duration-500 relative overflow-hidden backdrop-blur-sm h-full`}>
-                  {/* 네온 테두리 효과 */}
-                  <div className={`absolute inset-0 rounded-2xl ${game.glowColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
-                  
-                  {/* 배경 패턴 */}
-                  <div className="absolute inset-0 opacity-5">
+                <div className="bg-black border-4 border-gray-600 rounded p-4 shadow-lg hover:shadow-2xl transition-all duration-300 relative overflow-hidden h-full hover:border-green-400">
+                  {/* 레트로 배경 패턴 */}
+                  <div className="absolute inset-0 opacity-10">
                     <div className="w-full h-full" style={{
-                      backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M20 20c0 11.046-8.954 20-20 20v-40c11.046 0 20 8.954 20 20z'/%3E%3C/g%3E%3C/svg%3E")`
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Crect x='0' y='0' width='1' height='1'/%3E%3Crect x='8' y='0' width='1' height='1'/%3E%3Crect x='0' y='8' width='1' height='1'/%3E%3Crect x='8' y='8' width='1' height='1'/%3E%3C/g%3E%3C/svg%3E")`
                     }}></div>
                   </div>
                   
                   <div className="relative z-10 h-full flex flex-col">
                     {/* 게임 아이콘 */}
-                    <div className="text-center mb-4">
-                      <div className="text-6xl group-hover:scale-110 transition-transform duration-300 animate-bounce">
+                    <div className="text-center mb-3">
+                      <div className="text-4xl group-hover:scale-110 transition-transform duration-300">
                         {game.icon}
                       </div>
                     </div>
                     
                     {/* 게임 정보 */}
                     <div className="flex-1">
-                      <h2 className={`text-2xl font-black mb-3 text-center ${game.neonColor} animate-pulse`}>
+                      <h2 className="text-lg font-bold mb-2 text-center text-white uppercase tracking-wider group-hover:text-green-400 transition-colors">
                         {game.title}
                       </h2>
-                      <p className="text-gray-300 text-sm leading-relaxed mb-4 font-mono text-center">
+                      <p className="text-gray-400 text-xs leading-relaxed mb-3 text-center">
                         {game.description}
                       </p>
+                      
+                      {/* 레트로 스타일 메타 정보 */}
+                      <div className="text-center space-y-1">
+                        <div className="text-yellow-400 text-xs font-bold">
+                          DIFFICULTY: {game.difficulty}
+                        </div>
+                        <div className="text-blue-400 text-xs font-bold">
+                          PLAYERS: {game.players}
+                        </div>
+                        <div className="text-green-400 text-xs font-bold">
+                          HIGH SCORE: {highScores[game.id] || 0}
+                        </div>
+                      </div>
                     </div>
                   </div>
+                  
+                  {/* 선택 효과 */}
+                  {selectedGame === game.id && (
+                    <div className="absolute inset-0 border-4 border-green-400 bg-green-400/20 animate-pulse"></div>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         </main>
 
-        {/* 푸터 */}
-        <footer className="text-center py-12 relative">
-          <div className="bg-gradient-to-r from-gray-800/80 to-gray-900/80 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border-2 border-gray-600 max-w-2xl mx-auto">
+        {/* 푸터 - 레트로 스타일 */}
+        <footer className="text-center py-8 relative">
+          <div className="bg-black/80 border-2 border-gray-600 rounded p-4 shadow-lg max-w-2xl mx-auto">
             <div className="flex justify-center space-x-4 mb-4">
               <button
                 onClick={handleResetScores}
-                className={`px-6 py-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 uppercase tracking-wider ${
+                className={`px-4 py-2 rounded font-bold transition-all duration-300 transform hover:scale-105 uppercase tracking-wider text-sm ${
                   showResetConfirm 
-                    ? 'bg-red-600 hover:bg-red-700 text-white' 
-                    : 'bg-gray-700 hover:bg-gray-600 text-gray-300 border border-gray-600'
+                    ? 'bg-red-600 hover:bg-red-700 text-white border border-red-400' 
+                    : 'bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-600'
                 }`}
               >
-                {showResetConfirm ? '정말 초기화하시겠습니까?' : '점수 초기화'}
+                {showResetConfirm ? 'CONFIRM RESET?' : 'RESET SCORES'}
               </button>
             </div>
-            <p className="text-gray-400 font-mono text-sm">
-              © 2024 아케이드 존 - 계속하려면 코인을 넣으세요 🕹️
+            <p className="text-gray-400 text-xs font-mono">
+              © 2024 ARCADE ZONE - PRESS START TO CONTINUE 🕹️
             </p>
           </div>
         </footer>
       </div>
 
-      {/* 네온 효과 오버레이 */}
+      {/* 레트로 효과 오버레이 */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-red-400 rounded-full animate-ping"></div>
-        <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-blue-400 rounded-full animate-ping" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-1/4 left-1/3 w-1 h-1 bg-green-400 rounded-full animate-ping" style={{animationDelay: '2s'}}></div>
+        <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-green-400 rounded-full animate-ping"></div>
+        <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-red-400 rounded-full animate-ping" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-1/4 left-1/3 w-1 h-1 bg-blue-400 rounded-full animate-ping" style={{animationDelay: '2s'}}></div>
       </div>
     </div>
   );

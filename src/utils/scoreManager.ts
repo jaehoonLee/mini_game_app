@@ -17,10 +17,11 @@ export interface GameScore {
 
 export const GAME_IDS = {
   PRISON_BREAK: 'prison-break',
-  SNAKE: 'snake-game'
+  SNAKE: 'snake',
+  TETRIS: 'tetris'
 } as const;
 
-export type GameId = typeof GAME_IDS[keyof typeof GAME_IDS];
+export type GameId = 'prison-break' | 'snake' | 'tetris';
 
 // 로컬 스토리지 키 생성
 const getStorageKey = (gameId: GameId): string => {
@@ -131,8 +132,9 @@ export const getLeaderboard = (gameId: GameId): ScoreRecord[] => {
 // 모든 게임의 최고 점수 가져오기
 export const getAllHighScores = (): Record<GameId, number> => {
   return {
-    [GAME_IDS.PRISON_BREAK]: getHighScore(GAME_IDS.PRISON_BREAK),
-    [GAME_IDS.SNAKE]: getHighScore(GAME_IDS.SNAKE)
+    'prison-break': getHighScore(GAME_IDS.PRISON_BREAK),
+    'snake': getHighScore(GAME_IDS.SNAKE),
+    'tetris': getHighScore(GAME_IDS.TETRIS)
   };
 };
 

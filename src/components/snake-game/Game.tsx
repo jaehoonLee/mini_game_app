@@ -51,7 +51,7 @@ const Game: React.FC = () => {
   };
 
   const { width: gameWidth, height: gameHeight } = getGameDimensions();
-  const cellSize = Math.floor(gameWidth / 40); // 40x40 그리드
+  const cellSize = Math.floor(gameWidth / 20); // 20x20 그리드로 변경 (더 큰 픽셀)
 
   // 최고 점수와 리더보드 로드
   useEffect(() => {
